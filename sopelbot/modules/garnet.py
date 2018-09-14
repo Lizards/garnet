@@ -27,11 +27,11 @@ from django.db import connection
 from djangobot.models import Jerk
 from personality.models import Personality, Category, Keyword, Quote
 
-
 PERSONALITY = Personality.objects.get(slug=os.environ.get('BOT_PERSONALITY'))
 INTERVAL_TIMEOUT = int(os.environ.get('INTERVAL_TIMEOUT')) # Seconds before a quote becomes usable again
 TIMEOUT = int(os.environ.get('TIMEOUT')) # Seconds between quotes
 JERKS = [jerk.nick.lower() for jerk in Jerk.objects.all()] # List of nicknames to thwart
+
 
 # Execute on module load
 def setup(bot):

@@ -10,16 +10,17 @@ For this demo I created a "conspiracy theorist" personality for the bot.
 
 __Docker Compose__ is the only pre-requisite to running the demo.  Clone this repo and start the applications using `docker-compose up`.
 
-Five containers will start:
+Six containers will start:
 - An IRC server on port `6667`
 - A MySQL server
+- A memcache server
 - The Django development server, exposing the Django admin tool on port `8000`
 - The bot, automatically connecting to the the IRC server
 - An IRC web client (Kiwi) on port `7778`
 
 Django migrations will run automatically and the database will be populated with fixture data.  Note that it will mount a volume in `$HOME/.garnet` for persistent MySQL data.
 
-Navigate to `http://0.0.0.0:8000` and use credentials `admin:admin` to browse the Django admin tool.  The values in `Keywords` will get a response from the bot on IRC.
+Navigate to `http://0.0.0.0:8000/admin/` and use credentials `admin:admin` to browse the Django admin tool.  The values in `Keywords` will get a response from the bot on IRC.
 
 # Interacting with the bot
 

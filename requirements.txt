@@ -1,4 +1,5 @@
-sopel
 Django==2.1.1
 mysqlclient==1.3.13
+python-memcached==1.59
 pytz==2018.5
+sopel==6.5.3

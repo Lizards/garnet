@@ -18,6 +18,8 @@ services:
       - ircd
     logging:
       driver: "none"
+  memcached:
+    image: memcached:latest
   db:
     image: mysql:5.7
     environment:
@@ -39,12 +41,14 @@ services:
     depends_on:
       - base
       - db
+      - memcached
     environment:
       DB_HOST: db
       DB_PASSWORD: g4rn3t
       DB_NAME: garnet
       DB_ROOT_PASSWORD: root
       DB_MAX_TRIES: 10
+      CACHE_HOST: memcached
       LOG_LEVEL: DEBUG
       APP_NAME: djangobot
       APP_PORT: 8000
@@ -57,12 +61,13 @@ services:
     depends_on:
       - base
       - db
+      - memcached
       - ircd
     environment:
-      DJANGO_PATH: /garnet/djangobot
       DB_HOST: db
       DB_PASSWORD: g4rn3t
       DB_NAME: garnet
+      CACHE_HOST: memcached
       LOG_LEVEL: DEBUG
       BOT_PERSONALITY: conspiracy-theorist
       TIMEOUT: 5

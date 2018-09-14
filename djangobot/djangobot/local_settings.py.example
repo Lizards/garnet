@@ -4,7 +4,6 @@ import subprocess
 
 TIER = 'local'
 DEBUG = True
-BOT_PERSONALITY = os.environ.get('BOT_PERSONALITY', 'conspiracy-theorist')
 
 # # For doing this outside of docker-compose
 # def get_docker_ip(container_id): # nosec

@@ -52,6 +52,9 @@ else:
     except KeyError as e:
         print("*** Unable to fetch password from environment variable DB_PASSWORD; if in development, please define in local_settings.py")
 
+CACHE_HOST = os.environ.get('CACHE_HOST')
+CACHE_PORT = os.environ.get('CACHE_PORT', 11211)
+
 try:
     from djangobot.local_settings import *
 except ImportError as e: # pragma: nocover
@@ -119,6 +122,13 @@ DATABASES = {
     }
 }
 
+# Cache
+CACHES = {
+    'default': {
+        'BACKEND': 'django.core.cache.backends.memcached.MemcachedCache',
+        'LOCATION': f'{CACHE_HOST}:{CACHE_PORT}',
+    }
+}
 
 # Password validation
 # https://docs.djangoproject.com/en/2.1/ref/settings/#auth-password-validators

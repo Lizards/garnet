@@ -27,15 +27,15 @@ from django.db import connection
 from djangobot.models import Jerk
 from personality.models import Personality, Category, Keyword, Quote
 
+
 PERSONALITY = Personality.objects.get(slug=os.environ.get('BOT_PERSONALITY'))
 INTERVAL_TIMEOUT = int(os.environ.get('INTERVAL_TIMEOUT')) # Seconds before a quote becomes usable again
 TIMEOUT = int(os.environ.get('TIMEOUT')) # Seconds between quotes
-JERKS = [jerk.nick.lower() for jerk in Jerk.objects.all()] # List of nicknames to thwart
 
 
 # Execute on module load
 def setup(bot):
-    bot.memory['garnet'] = DumbAI(bot, personality=PERSONALITY, timeout=TIMEOUT, interval_timeout=INTERVAL_TIMEOUT, jerks=JERKS)
+    bot.memory['garnet'] = DumbAI(bot, personality=PERSONALITY, timeout=TIMEOUT, interval_timeout=INTERVAL_TIMEOUT)
 
 
 # React to everything said in channel or message
@@ -56,7 +56,7 @@ def react(bot, trigger):
 
 
 class DumbAI(object):
-    def __init__(self, bot, personality, timeout, interval_timeout, jerks, jerk_protection=True, bot_log='bot.log'):
+    def __init__(self, bot, personality, timeout, interval_timeout, jerk_protection=True, bot_log='bot.log'):
 
         self.logger = OutputRedirect(f'{bot.config.core.logdir}/{bot_log}', stderr=True, quiet=True)
         sys.stdout = self.logger
@@ -70,12 +70,11 @@ class DumbAI(object):
         # Protect against abuse from Jerks
         self.last_reacted = { 'user': None, 'timestamp': None }
         self.jerk_protection = jerk_protection
-        self.jerks = jerks
 
         # Store a list of all methods that begin with _action_
         self.actions = sorted(method[8:] for method in dir(self) if method[:8] == '_action_')
         
-        # Populate self.keywords and self.categories
+        # Populate self.jerks, self.keywords and self.categories
         self._populate_trigger_cache(bot)
 
     def check_for_django_updates(self, bot):
@@ -129,6 +128,7 @@ class DumbAI(object):
 
         self.keywords = {} # Local cache of keyword list from DB
         self.categories = {} # Local cache of category list from DB
+        self.jerks = [jerk.nick.lower() for jerk in Jerk.objects.all()] # Nicks to thwart
 
         # Cache all Keyword objects in a dict by keyword.name
         keywords = Keyword.objects.filter(category__personality=self.personality)

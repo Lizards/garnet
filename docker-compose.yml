@@ -52,7 +52,6 @@ services:
       LOG_LEVEL: DEBUG
       APP_NAME: djangobot
       APP_PORT: 8000
-      BOT_PERSONALITY: conspiracy-theorist
   bot:
     build: ./sopelbot
     volumes:
@@ -71,4 +70,4 @@ services:
       LOG_LEVEL: DEBUG
       BOT_PERSONALITY: conspiracy-theorist
       TIMEOUT: 5
-      INTERVAL_TIMEOUT: 60
+      INTERVAL_TIMEOUT: 120

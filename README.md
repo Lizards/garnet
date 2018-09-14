@@ -8,7 +8,7 @@ For this demo I created a "conspiracy theorist" personality for the bot.
 
 # Setup
 
-__Docker Compose__ is the only pre-requisite to running the demo.  Clone this repo and start the applications using `docker-compose up`.
+__Docker Compose__ is the only prerequisite to running the demo.  Clone this repo and start the applications using `docker-compose up`.
 
 Six containers will start:
 - An IRC server on port `6667`
@@ -20,15 +20,26 @@ Six containers will start:
 
 Django migrations will run automatically and the database will be populated with fixture data.  Note that it will mount a volume in `$HOME/.garnet` for persistent MySQL data.
 
-Navigate to `http://0.0.0.0:8000/admin/` and use credentials `admin:admin` to browse the Django admin tool.  The values in `Keywords` will get a response from the bot on IRC.
+The bot maintains an in-memory cache of `Jerks`, `Keywords`, and `Categories`.  Django will place a note in memcache when any of these models are updated, and the bot will refresh its local copy of the data.
+
+# Settings
+
+A couple settings are defined via environment variables in `docker-compose.yml`:
+
+- `TIMEOUT`: Number of seconds the bot will sleep before speaking again (default: `5`)
+- `INTERVAL_TIMEOUT`: Number of seconds that must elapse before a quote will be reused (default: `120`)
+
+IRC nicknames of `Jerks` can be defined in the Django admin.  `Jerks` are users who aren't allowed to invoke the bot twice in a row.  Another user must make the bot react before the bot will react to a `Jerk` a second time.
 
 # Interacting with the bot
 
-You can connect to IRC through your own client (e.g. Hexchat, irssi) at `0.0.0.0:6667`, or you can use the Kiwi web client at `http://0.0.0.0:7778/` with server settings:
+Navigate to `http://0.0.0.0:8000/admin/` and use credentials `admin:admin` to browse the Django admin tool.  The values in `Keywords` will get a response from the bot on IRC.
+
+You can connect to IRC through your own client (e.g. Hexchat, irssi) using server `0.0.0.0` and port `6667`, or you can use the Kiwi web client at `http://0.0.0.0:7778/`, with these settings under __Server and network__:
 
 - Server: `ircd`
 - Port: `6667`
-- Leave `SSL` unchecked
+- __Uncheck__ `SSL`
 
 Join channel __#chat__ to talk to Garnet.
 

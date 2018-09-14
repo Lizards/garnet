@@ -1,4 +1,19 @@
 from django.db import models
+from django.core.cache import cache
+
+
+class CacheRefreshModel(models.Model):
+
+    class Meta:
+        abstract = True
+
+    def save(self, *args, **kwargs):
+        super(CacheRefreshModel, self).save(*args, **kwargs)
+        cache.set('refresh_triggers', True)
+
+    def delete(self, *args, **kwargs):
+        super(CacheRefreshModel, self).delete(*args, **kwargs)
+        cache.set('refresh_triggers', True)
 
 
 class JerkManager(models.Manager):
@@ -7,7 +22,7 @@ class JerkManager(models.Manager):
         return self.get(nick=nick)
 
 
-class Jerk(models.Model):
+class Jerk(CacheRefreshModel):
 
     objects = JerkManager()
 

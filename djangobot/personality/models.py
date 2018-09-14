@@ -2,6 +2,8 @@ from django.db import models
 from django.core.cache import cache
 from django.utils.text import slugify
 
+from djangobot.models import CacheRefreshModel
+
 
 class PersonalityManager(models.Manager):
 
@@ -36,7 +38,7 @@ class CategoryManager(models.Manager):
         return self.get(name=name, personality__slug=personality_slug)
 
 
-class Category(models.Model):
+class Category(CacheRefreshModel):
 
     class Meta:
         verbose_name_plural = "categories"
@@ -50,14 +52,6 @@ class Category(models.Model):
     def natural_key(self):
         return (self.name, self.personality.slug)
 
-    def save(self, *args, **kwargs):
-        super(Category, self).save(*args, **kwargs)
-        cache.set('refresh_triggers', True)
-
-    def delete(self, *args, **kwargs):
-        super(Category, self).delete(*args, **kwargs)
-        cache.set('refresh_triggers', True)
-
     def __str__(self):
         return self.name
 
@@ -68,7 +62,7 @@ class KeywordManager(models.Manager):
         return self.get(name=name, category=category)
 
 
-class Keyword(models.Model):
+class Keyword(CacheRefreshModel):
 
     class Meta:
         unique_together = (("name", "category"),)
@@ -80,14 +74,6 @@ class Keyword(models.Model):
 
     def natural_key(self):
         return (self.name, self.category)
-
-    def save(self, *args, **kwargs):
-        super(Keyword, self).save(*args, **kwargs)
-        cache.set('refresh_triggers', True)
-
-    def delete(self, *args, **kwargs):
-        super(Keyword, self).delete(*args, **kwargs)
-        cache.set('refresh_triggers', True)
 
     def __str__(self):
         return self.name

@@ -4,5 +4,5 @@ RUN mkdir $HOME/logs && chown $USER $HOME/logs
 USER $USER
 WORKDIR $HOME
 
-ENTRYPOINT ["/bin/bash", "docker-entrypoint.sh"]
+ENTRYPOINT ["/bin/bash", "sopelbot/docker-entrypoint.sh"]
 CMD []

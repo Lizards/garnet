@@ -34,7 +34,6 @@ services:
     build: ./djangobot
     volumes:
       - ./djangobot:/garnet/djangobot
-      - ./sopelbot:/garnet/sopelbot
     ports:
       - "8000:8000"
     depends_on:
@@ -59,7 +58,6 @@ services:
       - base
       - db
       - ircd
-      - admin
     environment:
       DJANGO_PATH: /garnet/djangobot
       DB_HOST: db
@@ -68,4 +66,4 @@ services:
       LOG_LEVEL: DEBUG
       BOT_PERSONALITY: conspiracy-theorist
       TIMEOUT: 5
-      INTERVAL_TIMEOUT: 480
+      INTERVAL_TIMEOUT: 60

@@ -1,0 +1,19 @@
+import os
+import subprocess
+
+
+TIER = 'local'
+DEBUG = True
+BOT_PERSONALITY = os.environ.get('BOT_PERSONALITY', 'conspiracy-theorist')
+
+# # For doing this outside of docker-compose
+# def get_docker_ip(container_id): # nosec
+#     ip_name = subprocess.getoutput("docker inspect --format '{{ .NetworkSettings.IPAddress }} {{ .Name }}' %s" % container_id).strip() or 'localhost localhost'
+#     ip, name = ip_name.split(' ')
+#     print(f'Container {container_id} {name} IP: {ip}')
+#     return ip
+
+# MYSQL_CONTAINER_NAME = 'mysql-server'
+# DB_USER = 'root'
+# DB_PASSWORD = 'root'
+# DB_HOST = get_docker_ip(MYSQL_CONTAINER_NAME)

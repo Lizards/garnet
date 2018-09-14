@@ -1,0 +1,71 @@
+version: '3'
+
+services:
+  ircd:
+    image: inspircd/inspircd-docker
+    ports:
+      - "6667:6667"
+    environment:
+      INSP_NET_NAME: GarnetNET
+    logging:
+      driver: "none"
+  ircweb:
+    image: itzg/kiwi-irc
+    restart: always
+    ports:
+      - "7778:7778"
+    depends_on:
+      - ircd
+    logging:
+      driver: "none"
+  db:
+    image: mysql:5.7
+    environment:
+      MYSQL_DATABASE: garnet
+      MYSQL_USER: garnet
+      MYSQL_PASSWORD: g4rn3t
+      MYSQL_ROOT_PASSWORD: root
+    volumes:
+      - ${HOME}/.garnet/mysql-data:/var/lib/mysql
+  base:
+    image: garnet:0.0.1
+    build: .
+  admin:
+    build: ./djangobot
+    volumes:
+      - ./djangobot:/garnet/djangobot
+      - ./sopelbot:/garnet/sopelbot
+    ports:
+      - "8000:8000"
+    depends_on:
+      - base
+      - db
+    environment:
+      DB_HOST: db
+      DB_PASSWORD: g4rn3t
+      DB_NAME: garnet
+      DB_ROOT_PASSWORD: root
+      DB_MAX_TRIES: 10
+      LOG_LEVEL: DEBUG
+      APP_NAME: djangobot
+      APP_PORT: 8000
+      BOT_PERSONALITY: conspiracy-theorist
+  bot:
+    build: ./sopelbot
+    volumes:
+      - ./sopelbot:/garnet/sopelbot
+      - ./djangobot:/garnet/djangobot
+    depends_on:
+      - base
+      - db
+      - ircd
+      - admin
+    environment:
+      DJANGO_PATH: /garnet/djangobot
+      DB_HOST: db
+      DB_PASSWORD: g4rn3t
+      DB_NAME: garnet
+      LOG_LEVEL: DEBUG
+      BOT_PERSONALITY: conspiracy-theorist
+      TIMEOUT: 5
+      INTERVAL_TIMEOUT: 480

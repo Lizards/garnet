@@ -41,7 +41,7 @@ Join channel __#chat__ to talk to Garnet.
 [03:21:06] <Garnet> That idea was implanted by the reptilians to make you addicted to your iPhone
 ```
 
-Also try private messaging the bot for help: `Garnet: help`
+Also try private messaging the bot for help.  All commands including private messages must be prefixed with its name: `/msg Garnet Garnet: help`
 
 The help menu will explain how to add categories, keywords, and quotes through IRC.
 
